@@ -459,3 +459,57 @@ section{
   gap:14px;
   flex-wrap:wrap;
 }
+
+/* =====================================================
+   FOOTER + FLOATING CHAT
+===================================================== */
+
+.site-footer{
+  max-width:var(--container);
+  margin:0 auto;
+  padding:70px 40px;
+  border-top:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  gap:50px;
+}
+
+.footer-logo{
+  display:block;
+  font-size:1.25rem;
+  font-weight:700;
+  margin-bottom:10px;
+}
+
+.footer-links{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  gap:16px 24px;
+  max-width:620px;
+  color:var(--text-light);
+}
+
+.footer-links a:hover{
+  color:var(--accent);
+}
+
+.chat-launcher{
+  position:fixed;
+  right:28px;
+  bottom:28px;
+  z-index:200;
+  border:none;
+  border-radius:999px;
+  padding:16px 24px;
+  background:var(--accent);
+  color:white;
+  font-weight:700;
+  box-shadow:var(--shadow-hover);
+  transition:var(--transition);
+}
+
+.chat-launcher:hover{
+  background:var(--accent-hover);
+  transform:translateY(-3px);
+}
