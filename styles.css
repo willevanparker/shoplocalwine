@@ -972,3 +972,20 @@ section{
     justify-content:center;
   }
 }
+
+.coming-soon {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.75rem;
+  padding: 0.3rem 0.75rem;
+
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  color: var(--text-light);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  width: fit-content;
+}
