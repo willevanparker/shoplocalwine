@@ -16,6 +16,15 @@ exports.handler = async function (event) {
       };
     }
 
+    if (!process.env.OPENAI_API_KEY) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({
+          error: "Missing OpenAI API key in Netlify."
+        })
+      };
+    }
+
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
@@ -23,7 +32,7 @@ exports.handler = async function (event) {
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: "gpt-4.1-mini",
+        model: "gpt-4o-mini",
         input: [
           {
             role: "system",
@@ -41,16 +50,21 @@ exports.handler = async function (event) {
     const data = await response.json();
 
     if (!response.ok) {
+      console.error("OpenAI error:", data);
+
       return {
         statusCode: response.status,
         body: JSON.stringify({
-          error: "Sorry, Bria had trouble answering that. Please try again."
+          error:
+            data.error?.message ||
+            "Sorry, Bria had trouble answering that. Please try again."
         })
       };
     }
 
     const reply =
       data.output_text ||
+      data.output?.[0]?.content?.[0]?.text ||
       "Sorry, I had trouble answering that. Try again?";
 
     return {
@@ -58,6 +72,8 @@ exports.handler = async function (event) {
       body: JSON.stringify({ reply })
     };
   } catch (error) {
+    console.error("Function error:", error);
+
     return {
       statusCode: 500,
       body: JSON.stringify({
