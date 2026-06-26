@@ -1,207 +1,259 @@
-// ---------------------------------------------
-// Chat panel (launcher + hero CTA open the same panel)
-// ---------------------------------------------
-const chatLauncher = document.getElementById("chatLauncher");
-const openChatHero = document.getElementById("openChatHero");
-const chatPanel = document.getElementById("chatPanel");
-const chatPanelClose = document.getElementById("chatPanelClose");
+(() => {
+  "use strict";
 
-function setChatOpen(isOpen) {
-  if (!chatPanel || !chatLauncher) return;
+  const CHAT_ENDPOINT = "/.netlify/functions/ask-bria";
 
-  chatPanel.setAttribute("data-open", String(isOpen));
-  chatLauncher.setAttribute("aria-expanded", String(isOpen));
+  const elements = {
+    chatLauncher: document.getElementById("chatLauncher"),
+    openChatNav: document.getElementById("openChatNav"),
+    openChatHero: document.getElementById("openChatHero"),
+    openChatStart: document.getElementById("openChatStart"),
+    chatPanel: document.getElementById("chatPanel"),
+    chatPanelClose: document.getElementById("chatPanelClose"),
+    chatForm: document.getElementById("chatForm"),
+    chatInput: document.getElementById("chatInput"),
+    chatMessages: document.getElementById("chatMessages"),
+    newsletterForm: document.getElementById("newsletterForm"),
+    newsletterEmail: document.getElementById("newsletterEmail"),
+    newsletterStatus: document.getElementById("newsletterStatus")
+  };
 
-  if (isOpen) {
-    const chatInput = document.getElementById("chatInput");
-    setTimeout(() => {
-      if (chatInput) chatInput.focus();
-    }, 100);
+  const chatState = {
+    isOpen: false,
+    isBusy: false
+  };
+
+  function openChat() {
+    setChatOpen(true);
   }
-}
 
-function toggleChat() {
-  if (!chatPanel) return;
-
-  const isOpen = chatPanel.getAttribute("data-open") === "true";
-  setChatOpen(!isOpen);
-}
-
-if (chatLauncher) {
-  chatLauncher.addEventListener("click", toggleChat);
-}
-
-if (openChatHero) {
-  openChatHero.addEventListener("click", () => setChatOpen(true));
-}
-
-if (chatPanelClose) {
-  chatPanelClose.addEventListener("click", () => setChatOpen(false));
-}
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
+  function closeChat() {
     setChatOpen(false);
   }
-});
 
-document.addEventListener("click", (event) => {
-  if (!chatPanel || chatPanel.getAttribute("data-open") !== "true") return;
-
-  const clickedInsidePanel = chatPanel.contains(event.target);
-  const clickedLauncher = chatLauncher && chatLauncher.contains(event.target);
-  const clickedHeroCta = openChatHero && openChatHero.contains(event.target);
-
-  if (!clickedInsidePanel && !clickedLauncher && !clickedHeroCta) {
-    setChatOpen(false);
+  function toggleChat() {
+    setChatOpen(!chatState.isOpen);
   }
-});
 
+  function setChatOpen(isOpen) {
+    if (!elements.chatPanel || !elements.chatLauncher) return;
 
-// ---------------------------------------------
-// Ask Bria chat
-// ---------------------------------------------
-const chatForm = document.getElementById("chatForm");
-const chatInput = document.getElementById("chatInput");
-const chatMessages = document.getElementById("chatMessages");
+    chatState.isOpen = isOpen;
 
-function addChatMessage(text, sender) {
-  if (!chatMessages) return;
+    elements.chatPanel.dataset.open = String(isOpen);
+    elements.chatPanel.setAttribute("aria-hidden", String(!isOpen));
+    elements.chatLauncher.setAttribute("aria-expanded", String(isOpen));
 
-  const message = document.createElement("div");
-  message.className = `chat-message ${sender}`;
-  message.textContent = text;
-
-  chatMessages.appendChild(message);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-
-  return message;
-}
-
-function setChatBusy(isBusy) {
-  if (!chatForm || !chatInput) return;
-
-  chatForm.dataset.busy = String(isBusy);
-  chatInput.disabled = isBusy;
-
-  const submitButton = chatForm.querySelector("button");
-  if (submitButton) {
-    submitButton.disabled = isBusy;
-    submitButton.textContent = isBusy ? "Sending..." : "Send";
+    if (isOpen && elements.chatInput) {
+      window.setTimeout(() => {
+        elements.chatInput.focus();
+      }, 100);
+    }
   }
-}
 
-if (chatForm && chatInput && chatMessages) {
-  chatForm.addEventListener("submit", async (event) => {
+  function addChatMessage(text, sender, options = {}) {
+    if (!elements.chatMessages) return null;
+
+    const message = document.createElement("div");
+    message.className = `chat-message ${sender}`;
+
+    if (options.isLoading) {
+      message.classList.add("is-loading");
+      message.setAttribute("aria-label", "Bria is thinking");
+    }
+
+    message.textContent = text;
+    elements.chatMessages.appendChild(message);
+    scrollChatToBottom();
+
+    return message;
+  }
+
+  function removeMessage(message) {
+    if (message && message.parentNode) {
+      message.parentNode.removeChild(message);
+    }
+  }
+
+  function scrollChatToBottom() {
+    if (!elements.chatMessages) return;
+    elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+  }
+
+  function setChatBusy(isBusy) {
+    if (!elements.chatForm || !elements.chatInput) return;
+
+    chatState.isBusy = isBusy;
+    elements.chatForm.dataset.busy = String(isBusy);
+    elements.chatInput.disabled = isBusy;
+
+    const submitButton = elements.chatForm.querySelector("button[type='submit']");
+
+    if (submitButton) {
+      submitButton.disabled = isBusy;
+      submitButton.textContent = isBusy ? "Sending..." : "Send";
+    }
+  }
+
+  async function askBria(message) {
+    const response = await fetch(CHAT_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message })
+    });
+
+    const data = await safelyParseJson(response);
+
+    if (!response.ok) {
+      throw new Error(
+        data.error || "Sorry, Bria had trouble answering that. Please try again."
+      );
+    }
+
+    return data.reply || "Sorry, I had trouble answering that. Try again?";
+  }
+
+  async function safelyParseJson(response) {
+    try {
+      return await response.json();
+    } catch {
+      return {};
+    }
+  }
+
+  async function handleChatSubmit(event) {
     event.preventDefault();
 
-    const userMessage = chatInput.value.trim();
+    if (chatState.isBusy || !elements.chatInput) return;
+
+    const userMessage = elements.chatInput.value.trim();
     if (!userMessage) return;
 
     addChatMessage(userMessage, "user");
-    chatInput.value = "";
+    elements.chatInput.value = "";
 
-    const thinkingMessage = addChatMessage("Thinking...", "bria");
+    const thinkingMessage = addChatMessage("Thinking...", "bria", {
+      isLoading: true
+    });
+
     setChatBusy(true);
 
     try {
-      const response = await fetch("/.netlify/functions/ask-bria", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          message: userMessage
-        })
-      });
-
-      let data = {};
-      try {
-        data = await response.json();
-      } catch (jsonError) {
-        data = {};
-      }
-
-      if (thinkingMessage) {
-        thinkingMessage.remove();
-      }
-
-      if (!response.ok) {
-        addChatMessage(
-          data.error || "Sorry, Bria had trouble answering that. Please try again.",
-          "bria"
-        );
-        return;
-      }
-
-      addChatMessage(
-        data.reply || "Sorry, I had trouble answering that. Try again?",
-        "bria"
-      );
+      const reply = await askBria(userMessage);
+      removeMessage(thinkingMessage);
+      addChatMessage(reply, "bria");
     } catch (error) {
-      if (thinkingMessage) {
-        thinkingMessage.remove();
-      }
-
+      removeMessage(thinkingMessage);
       addChatMessage(
-        "Sorry, Bria had trouble connecting. Please try again in a moment.",
+        error.message || "Sorry, Bria had trouble connecting. Please try again in a moment.",
         "bria"
       );
     } finally {
       setChatBusy(false);
-      chatInput.focus();
+      elements.chatInput.focus();
     }
-  });
-}
+  }
 
+  function isClickOutsideChat(event) {
+    if (!elements.chatPanel || !chatState.isOpen) return false;
 
-// ---------------------------------------------
-// Newsletter form — inline validation, no alert()s
-// ---------------------------------------------
-const newsletterForm = document.getElementById("newsletterForm");
-const newsletterEmail = document.getElementById("newsletterEmail");
-const newsletterStatus = document.getElementById("newsletterStatus");
+    const clickTarget = event.target;
 
-function setNewsletterStatus(message, state) {
-  if (!newsletterStatus) return;
+    const openButtons = [
+      elements.chatLauncher,
+      elements.openChatNav,
+      elements.openChatHero,
+      elements.openChatStart
+    ].filter(Boolean);
 
-  newsletterStatus.textContent = message;
-  newsletterStatus.dataset.state = state || "";
-}
+    const clickedPanel = elements.chatPanel.contains(clickTarget);
+    const clickedOpenButton = openButtons.some((button) =>
+      button.contains(clickTarget)
+    );
 
-function isLikelyValidEmail(value) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
+    return !clickedPanel && !clickedOpenButton;
+  }
 
-if (newsletterForm && newsletterEmail) {
-  newsletterForm.addEventListener("submit", (event) => {
+  function handleDocumentClick(event) {
+    if (isClickOutsideChat(event)) {
+      closeChat();
+    }
+  }
+
+  function handleDocumentKeydown(event) {
+    if (event.key === "Escape" && chatState.isOpen) {
+      closeChat();
+    }
+  }
+
+  function setNewsletterStatus(message, state = "") {
+    if (!elements.newsletterStatus) return;
+
+    elements.newsletterStatus.textContent = message;
+    elements.newsletterStatus.dataset.state = state;
+  }
+
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  function handleNewsletterSubmit(event) {
     event.preventDefault();
 
-    const email = newsletterEmail.value.trim();
+    if (!elements.newsletterEmail) return;
+
+    const email = elements.newsletterEmail.value.trim();
 
     if (!email) {
-      newsletterEmail.setAttribute("aria-invalid", "true");
+      elements.newsletterEmail.setAttribute("aria-invalid", "true");
       setNewsletterStatus("Enter your email address to join.", "error");
-      newsletterEmail.focus();
+      elements.newsletterEmail.focus();
       return;
     }
 
-    if (!isLikelyValidEmail(email)) {
-      newsletterEmail.setAttribute("aria-invalid", "true");
+    if (!isValidEmail(email)) {
+      elements.newsletterEmail.setAttribute("aria-invalid", "true");
       setNewsletterStatus("That email address doesn't look quite right.", "error");
-      newsletterEmail.focus();
+      elements.newsletterEmail.focus();
       return;
     }
 
-    newsletterEmail.removeAttribute("aria-invalid");
+    elements.newsletterEmail.removeAttribute("aria-invalid");
     setNewsletterStatus("You're on the list for Bria's Weekly Pour. 🍷", "success");
-    newsletterEmail.value = "";
-  });
+    elements.newsletterEmail.value = "";
+  }
 
-  newsletterEmail.addEventListener("input", () => {
-    if (newsletterEmail.getAttribute("aria-invalid") === "true") {
-      newsletterEmail.removeAttribute("aria-invalid");
-      setNewsletterStatus("", "");
+  function handleNewsletterInput() {
+    if (!elements.newsletterEmail) return;
+
+    if (elements.newsletterEmail.getAttribute("aria-invalid") === "true") {
+      elements.newsletterEmail.removeAttribute("aria-invalid");
+      setNewsletterStatus("");
     }
-  });
-}
+  }
+
+  function bindEvents() {
+    elements.chatLauncher?.addEventListener("click", toggleChat);
+    elements.openChatNav?.addEventListener("click", openChat);
+    elements.openChatHero?.addEventListener("click", openChat);
+    elements.openChatStart?.addEventListener("click", openChat);
+    elements.chatPanelClose?.addEventListener("click", closeChat);
+
+    elements.chatForm?.addEventListener("submit", handleChatSubmit);
+
+    document.addEventListener("click", handleDocumentClick);
+    document.addEventListener("keydown", handleDocumentKeydown);
+
+    elements.newsletterForm?.addEventListener("submit", handleNewsletterSubmit);
+    elements.newsletterEmail?.addEventListener("input", handleNewsletterInput);
+  }
+
+  function init() {
+    bindEvents();
+    setChatOpen(false);
+  }
+
+  init();
+})();
