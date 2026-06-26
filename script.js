@@ -132,3 +132,25 @@ shopSearch.addEventListener("input", (event) => {
 });
 
 renderShops(shops);
+
+// ==========================
+// Chat UI
+// ==========================
+
+const openConcierge = document.getElementById("openConcierge");
+const closeConcierge = document.getElementById("closeConcierge");
+const chatOverlay = document.getElementById("chatOverlay");
+
+openConcierge.addEventListener("click", () => {
+  chatOverlay.classList.add("open");
+});
+
+closeConcierge.addEventListener("click", () => {
+  chatOverlay.classList.remove("open");
+});
+
+chatOverlay.addEventListener("click", (event) => {
+  if (event.target === chatOverlay) {
+    chatOverlay.classList.remove("open");
+  }
+});
