@@ -22,16 +22,18 @@
 
 <body>
   <header class="site-header">
-    <a href="#" class="logo">Bria</a>
+    <a href="/" class="logo" aria-label="Bria home">Bria</a>
 
-    <nav class="main-nav">
+    <nav class="main-nav" aria-label="Main navigation">
       <a href="#articles">Articles</a>
       <a href="#shop">Shop</a>
       <a href="#guides">Guides</a>
       <a href="#about">About</a>
     </nav>
 
-    <a href="#ask" class="nav-cta">Ask Bria</a>
+    <button class="nav-cta" id="openChatNav" type="button">
+      Ask Bria
+    </button>
   </header>
 
   <main>
@@ -47,7 +49,9 @@
           </p>
 
           <div class="hero-actions">
-            <button class="primary-button" id="openChatHero">Ask Bria</button>
+            <button class="primary-button" id="openChatHero" type="button">
+              Ask Bria
+            </button>
             <a href="#articles" class="secondary-button">Explore the site</a>
           </div>
         </div>
@@ -64,17 +68,17 @@
       </div>
     </section>
 
-    <section class="start-here section">
+    <section class="section start-here">
       <div class="section-heading">
         <h2>Start here.</h2>
       </div>
 
       <div class="card-grid four">
-        <a href="#ask" class="feature-card">
+        <button class="feature-card" id="openChatStart" type="button">
           <span>01</span>
           <h3>Ask Bria</h3>
           <p>Get approachable answers to wine questions, pairings, grapes, regions, and labels.</p>
-        </a>
+        </button>
 
         <a href="#articles" class="feature-card">
           <span>02</span>
@@ -260,7 +264,13 @@
     Ask Bria
   </button>
 
-  <aside class="chat-panel" id="chatPanel" data-open="false" aria-label="Ask Bria chat">
+  <aside
+    class="chat-panel"
+    id="chatPanel"
+    data-open="false"
+    aria-label="Ask Bria chat"
+    aria-hidden="true"
+  >
     <div class="chat-panel-header">
       <div>
         <p class="eyebrow">Ask Bria</p>
@@ -282,13 +292,14 @@
         Ask about grapes, pairings, labels, regions, serving temperature, or what to bring to dinner.
       </p>
 
-      <div class="chat-messages" id="chatMessages">
+      <div class="chat-messages" id="chatMessages" aria-live="polite">
         <div class="chat-message bria">
           Hi, I’m Bria. Ask me about wine, pairings, labels, regions, or what bottle to bring.
         </div>
       </div>
 
       <form class="chat-form" id="chatForm">
+        <label class="sr-only" for="chatInput">Ask Bria a wine question</label>
         <input
           type="text"
           id="chatInput"
@@ -302,27 +313,27 @@
   </aside>
 
   <footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <a href="#" class="footer-logo">Bria</a>
-      <p>Made with ❤️ in Atlatna, GA.</p>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="footer-logo" aria-label="Bria home">Bria</a>
+        <p>Made with ❤️ in Atlanta, GA.</p>
+      </div>
+
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="#articles">Articles</a>
+        <a href="#shop">Shop</a>
+        <a href="#guides">Guides</a>
+        <a href="#about">About</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+      </nav>
     </div>
 
-    <nav class="footer-nav" aria-label="Footer navigation">
-      <a href="#articles">Articles</a>
-      <a href="#shop">Shop</a>
-      <a href="#guides">Guides</a>
-      <a href="#about">About</a>
-      <a href="#">Privacy</a>
-      <a href="#">Terms</a>
-    </nav>
-  </div>
-
-  <div class="footer-bottom">
-    <p>© 2026 Bria.</p>
-    <p>Please enjoy wine responsibly.</p>
-  </div>
-</footer>
+    <div class="footer-bottom">
+      <p>© 2026 Bria.</p>
+      <p>Please enjoy wine responsibly.</p>
+    </div>
+  </footer>
 
   <script src="script.js"></script>
 </body>
