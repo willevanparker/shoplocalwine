@@ -8,15 +8,21 @@ const chatPanelClose = document.getElementById("chatPanelClose");
 
 function setChatOpen(isOpen) {
   if (!chatPanel || !chatLauncher) return;
+
   chatPanel.setAttribute("data-open", String(isOpen));
   chatLauncher.setAttribute("aria-expanded", String(isOpen));
 
   if (isOpen) {
-    chatPanelClose && chatPanelClose.focus();
+    const chatInput = document.getElementById("chatInput");
+    setTimeout(() => {
+      if (chatInput) chatInput.focus();
+    }, 100);
   }
 }
 
 function toggleChat() {
+  if (!chatPanel) return;
+
   const isOpen = chatPanel.getAttribute("data-open") === "true";
   setChatOpen(!isOpen);
 }
@@ -53,6 +59,103 @@ document.addEventListener("click", (event) => {
 
 
 // ---------------------------------------------
+// Ask Bria chat
+// ---------------------------------------------
+const chatForm = document.getElementById("chatForm");
+const chatInput = document.getElementById("chatInput");
+const chatMessages = document.getElementById("chatMessages");
+
+function addChatMessage(text, sender) {
+  if (!chatMessages) return;
+
+  const message = document.createElement("div");
+  message.className = `chat-message ${sender}`;
+  message.textContent = text;
+
+  chatMessages.appendChild(message);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+
+  return message;
+}
+
+function setChatBusy(isBusy) {
+  if (!chatForm || !chatInput) return;
+
+  chatForm.dataset.busy = String(isBusy);
+  chatInput.disabled = isBusy;
+
+  const submitButton = chatForm.querySelector("button");
+  if (submitButton) {
+    submitButton.disabled = isBusy;
+    submitButton.textContent = isBusy ? "Sending..." : "Send";
+  }
+}
+
+if (chatForm && chatInput && chatMessages) {
+  chatForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const userMessage = chatInput.value.trim();
+    if (!userMessage) return;
+
+    addChatMessage(userMessage, "user");
+    chatInput.value = "";
+
+    const thinkingMessage = addChatMessage("Thinking...", "bria");
+    setChatBusy(true);
+
+    try {
+      const response = await fetch("/.netlify/functions/ask-bria", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: userMessage
+        })
+      });
+
+      let data = {};
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        data = {};
+      }
+
+      if (thinkingMessage) {
+        thinkingMessage.remove();
+      }
+
+      if (!response.ok) {
+        addChatMessage(
+          data.error || "Sorry, Bria had trouble answering that. Please try again.",
+          "bria"
+        );
+        return;
+      }
+
+      addChatMessage(
+        data.reply || "Sorry, I had trouble answering that. Try again?",
+        "bria"
+      );
+    } catch (error) {
+      if (thinkingMessage) {
+        thinkingMessage.remove();
+      }
+
+      addChatMessage(
+        "Sorry, Bria had trouble connecting. Please try again in a moment.",
+        "bria"
+      );
+    } finally {
+      setChatBusy(false);
+      chatInput.focus();
+    }
+  });
+}
+
+
+// ---------------------------------------------
 // Newsletter form — inline validation, no alert()s
 // ---------------------------------------------
 const newsletterForm = document.getElementById("newsletterForm");
@@ -61,6 +164,7 @@ const newsletterStatus = document.getElementById("newsletterStatus");
 
 function setNewsletterStatus(message, state) {
   if (!newsletterStatus) return;
+
   newsletterStatus.textContent = message;
   newsletterStatus.dataset.state = state || "";
 }
