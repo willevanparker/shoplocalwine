@@ -1,7 +1,12 @@
 exports.handler = async function (event) {
+  const headers = {
+    "Content-Type": "application/json"
+  };
+
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
+      headers,
       body: JSON.stringify({ error: "Method not allowed" })
     };
   }
@@ -12,6 +17,7 @@ exports.handler = async function (event) {
     if (!message || typeof message !== "string") {
       return {
         statusCode: 400,
+        headers,
         body: JSON.stringify({ error: "Please ask Bria a question." })
       };
     }
@@ -19,6 +25,7 @@ exports.handler = async function (event) {
     if (!process.env.OPENAI_API_KEY) {
       return {
         statusCode: 500,
+        headers,
         body: JSON.stringify({
           error: "Missing OpenAI API key in Netlify."
         })
@@ -32,7 +39,7 @@ exports.handler = async function (event) {
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-       model: "gpt-4o-mini",
+        model: "gpt-4o-mini",
         input: [
           {
             role: "system",
@@ -50,10 +57,9 @@ exports.handler = async function (event) {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error("OpenAI error:", data);
-
       return {
         statusCode: response.status,
+        headers,
         body: JSON.stringify({
           error:
             data.error?.message ||
@@ -69,13 +75,13 @@ exports.handler = async function (event) {
 
     return {
       statusCode: 200,
+      headers,
       body: JSON.stringify({ reply })
     };
   } catch (error) {
-    console.error("Function error:", error);
-
     return {
       statusCode: 500,
+      headers,
       body: JSON.stringify({
         error: "Sorry, Bria had trouble connecting. Please try again in a moment."
       })
