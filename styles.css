@@ -1377,6 +1377,16 @@ section{
 }
 
 @media (max-width: 768px) {
+  .site-header {
+    position: relative;
+    padding: 24px 24px 18px;
+  }
+
+  .menu-toggle {
+    display: block;
+    margin-left: auto;
+  }
+
   .main-nav {
     display: none;
   }
@@ -1384,16 +1394,26 @@ section{
   .main-nav[data-open="true"] {
     display: flex;
     position: absolute;
-    top: 72px;
-    right: 20px;
-    left: 20px;
+    top: calc(100% + 10px);
+    left: 24px;
+    right: 24px;
     flex-direction: column;
-    gap: 18px;
-    padding: 22px;
+    align-items: center;
+    gap: 22px;
+    padding: 28px 24px;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 18px;
+    border-radius: 24px;
     box-shadow: var(--shadow);
-    z-index: 100;
+    z-index: 999;
+  }
+
+  .main-nav[data-open="true"] a {
+    font-size: 1.05rem;
+    padding: 4px 0;
+  }
+
+  .nav-cta {
+    display: none;
   }
 }
