@@ -50,35 +50,54 @@
       </div>
     </section>
 
-    <section class="directory-section" id="directory">
-      <div class="section-heading">
-        <p class="eyebrow">Directory</p>
-        <h2>Search by city, state, ZIP, or shop name.</h2>
-      </div>
+  <section class="directory-section" id="directory">
+  <div class="section-heading">
+    <p class="eyebrow">Directory</p>
+    <h2>Search by city, state, ZIP, or shop name.</h2>
+  </div>
 
-      <div class="directory-layout">
-        <div class="map-panel">
-          <div class="map-placeholder">
-            <span class="map-pin">●</span>
-            <p>Interactive map coming soon</p>
-          </div>
+  <div class="mobile-search-panel">
+    <div class="search-box">
+      <input
+        type="search"
+        id="shopSearch"
+        placeholder="Try Atlanta, 30306, or Georgia"
+        aria-label="Search wine shops"
+      />
+    </div>
+
+    <div class="results-meta" id="resultsMeta">
+      Featured Atlanta shops
+    </div>
+  </div>
+
+  <div class="directory-layout">
+    <div class="map-panel">
+      <div class="map-placeholder">
+        <span class="map-pin">●</span>
+        <p>Interactive map coming soon</p>
+      </div>
+    </div>
+
+    <aside class="results-panel">
+      <div class="desktop-search-panel">
+        <div class="search-box">
+          <input
+            type="search"
+            id="shopSearchDesktop"
+            placeholder="Try Atlanta, 30306, or Georgia"
+            aria-label="Search wine shops"
+          />
         </div>
 
-        <aside class="results-panel">
-          <div class="search-box">
-            <input
-              type="search"
-              id="shopSearch"
-              placeholder="Try Atlanta, 30306, or Georgia"
-              aria-label="Search wine shops"
-            />
-<div class="results-meta" id="resultsMeta">
-  Featured Atlanta shops
-</div>
+        <div class="results-meta">
+          Featured Atlanta shops
+        </div>
+      </div>
 
-<div class="shop-list" id="shopList"></div>
-</aside>
-</div>
+      <div class="shop-list" id="shopList"></div>
+    </aside>
+  </div>
 </section>
 
     <section class="newsletter-section" id="newsletter">
