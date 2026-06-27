@@ -184,25 +184,26 @@ function renderShops(list) {
         ? "Results"
         : `${list.length} matching shop${list.length === 1 ? "" : "s"}`;
   }
+list.forEach((shop) => {
+  const location = shop.neighborhood
+    ? `${shop.neighborhood} · ${shop.city}, ${shop.state} ${shop.zip}`
+    : `${shop.city}, ${shop.state} ${shop.zip}`;
 
-  list.forEach((shop) => {
-    const card = document.createElement("article");
-    card.className = "shop-card";
-    card.dataset.shopId = shop.id;
+  const card = document.createElement("article");
+  card.className = "shop-card";
+  card.dataset.shopId = shop.id;
 
-    card.innerHTML = `
-      <h3>${shop.name}</h3>
-      <p class="shop-location">
-        ${shop.neighborhood || ""} · ${shop.city}, ${shop.state} ${shop.zip}
-      </p>
-      <p class="shop-description">${shop.description}</p>
-      <div class="shop-tags">
-        ${shop.tags.map((tag) => `<span>${tag}</span>`).join("")}
-      </div>
-      <a class="shop-link" href="${shop.website}" target="_blank" rel="noopener">
-        Visit shop →
-      </a>
-    `;
+  card.innerHTML = `
+    <h3>${shop.name}</h3>
+    <p class="shop-location">${location}</p>
+    <p class="shop-description">${shop.description}</p>
+    <div class="shop-tags">
+      ${shop.tags.map((tag) => `<span>${tag}</span>`).join("")}
+    </div>
+    <a class="shop-link" href="${shop.website}" target="_blank" rel="noopener">
+      Visit shop →
+    </a>
+  `;
 
     card.addEventListener("click", () => {
       document.querySelectorAll(".shop-card").forEach((card) => {
