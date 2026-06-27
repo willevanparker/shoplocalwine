@@ -104,8 +104,13 @@ if (window.mapboxgl && document.getElementById("wineMap")) {
         );
 
         if (matchingCard) {
-          matchingCard.classList.add("active");
-        }
+  matchingCard.classList.add("active");
+
+  matchingCard.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+}
       });
     });
   });
@@ -163,7 +168,17 @@ card.dataset.shopId = shop.id;
     `;
 
     shopList.appendChild(card);
+    card.addEventListener("click", () => {
+  if (!map) return;
+
+  map.flyTo({
+    center: [shop.longitude, shop.latitude],
+    zoom: 14,
+    duration: 1200,
+    essential: true
   });
+  });
+});
 }
 
 function filterShops(query) {
