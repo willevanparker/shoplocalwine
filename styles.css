@@ -752,3 +752,8 @@ h3 {
   }
 
 }
+
+.directory-label,
+.featured-shops-label {
+  display: none;
+}
