@@ -807,3 +807,69 @@ h3 {
 .mapboxgl-marker {
   cursor: pointer;
 }
+
+/* ==========================================
+   ABOUT PAGE
+========================================== */
+
+.about-page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 7rem 1.5rem 6rem;
+}
+
+.about-eyebrow {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.about-title {
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.06em;
+  margin: 0 0 3rem;
+  max-width: 10ch;
+}
+
+.about-content {
+  max-width: 640px;
+}
+
+.about-content p {
+  font-size: 1.15rem;
+  line-height: 1.85;
+  color: var(--text);
+  margin-bottom: 1.75rem;
+}
+
+.about-signoff {
+  margin-top: 3rem;
+  margin-bottom: 0.25rem;
+}
+
+.about-name {
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+
+  .about-page {
+    padding: 4rem 1.5rem;
+  }
+
+  .about-title {
+    font-size: clamp(2.75rem, 12vw, 4.25rem);
+    margin-bottom: 2rem;
+  }
+
+  .about-content p {
+    font-size: 1.05rem;
+    line-height: 1.75;
+  }
+
+}
