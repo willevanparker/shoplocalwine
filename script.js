@@ -31,8 +31,7 @@ let shops = [];
 let shopMarkers = [];
 let map = null;
 let mapLoaded = false;
-
-const INITIAL_SHOP_LIMIT = 4;
+let activeShopId = null;
 
 // ==========================
 // Supabase
@@ -65,24 +64,87 @@ if (window.mapboxgl && document.getElementById("wineMap")) {
 
   map.on("load", () => {
     mapLoaded = true;
+    renderAllMarkers();
+    renderVisibleShopsFromMap();
+  });
 
-    const initialShops = getInitialShops();
-    addShopMarkers(initialShops);
-    fitMapToShops(initialShops);
+  map.on("moveend", () => {
+    const hasSearch = shopSearch && shopSearch.value.trim();
+
+    if (hasSearch) return;
+
+    renderVisibleShopsFromMap();
   });
 }
 
-function getInitialShops() {
-  return shops.slice(0, INITIAL_SHOP_LIMIT);
+// ==========================
+// Map Helpers
+// ==========================
+
+function getValidShops(list) {
+  return list.filter(
+    (shop) =>
+      Number.isFinite(shop.longitude) &&
+      Number.isFinite(shop.latitude)
+  );
 }
 
-function addShopMarkers(list) {
+function getVisibleShopsInMap() {
+  if (!map || !mapLoaded) return shops;
+
+  const bounds = map.getBounds();
+
+  return getValidShops(shops).filter((shop) =>
+    bounds.contains([shop.longitude, shop.latitude])
+  );
+}
+
+function renderVisibleShopsFromMap() {
+  const visibleShops = getVisibleShopsInMap();
+
+  renderShops(visibleShops, {
+    mode: "map"
+  });
+}
+
+function fitMapToShops(list) {
+  if (!map || !mapLoaded || !list.length) return;
+
+  const validShops = getValidShops(list);
+
+  if (!validShops.length) return;
+
+  if (validShops.length === 1) {
+    map.flyTo({
+      center: [validShops[0].longitude, validShops[0].latitude],
+      zoom: 13.5,
+      duration: 900,
+      essential: true
+    });
+
+    return;
+  }
+
+  const bounds = new mapboxgl.LngLatBounds();
+
+  validShops.forEach((shop) => {
+    bounds.extend([shop.longitude, shop.latitude]);
+  });
+
+  map.fitBounds(bounds, {
+    padding: 80,
+    maxZoom: 13,
+    duration: 900
+  });
+}
+
+function renderAllMarkers() {
   if (!map || !mapLoaded) return;
 
   shopMarkers.forEach((marker) => marker.remove());
   shopMarkers = [];
 
-  list.forEach((shop) => {
+  getValidShops(shops).forEach((shop) => {
     const popup = new mapboxgl.Popup({ offset: 24 }).setHTML(`
       <strong>${shop.name}</strong><br>
       ${shop.neighborhood || `${shop.city}, ${shop.state}`}
@@ -94,24 +156,44 @@ function addShopMarkers(list) {
       .addTo(map);
 
     marker.getElement().addEventListener("click", () => {
-      document.querySelectorAll(".shop-card").forEach((card) => {
-        card.classList.remove("active");
-      });
+      setActiveShop(shop.id);
 
-      const matchingCard = document.querySelector(
-        `[data-shop-id="${shop.id}"]`
+      const visibleShops = getVisibleShopsInMap();
+      const shopIsVisibleInCards = visibleShops.some(
+        (visibleShop) => visibleShop.id === shop.id
       );
 
-      if (matchingCard) {
-        matchingCard.classList.add("active");
-        matchingCard.scrollIntoView({
-          behavior: "smooth",
-          block: "center"
+      if (!shopIsVisibleInCards) {
+        renderShops([shop], {
+          mode: "selected"
         });
       }
+
+      scrollToActiveCard();
     });
 
     shopMarkers.push(marker);
+  });
+}
+
+function setActiveShop(shopId) {
+  activeShopId = shopId;
+
+  document.querySelectorAll(".shop-card").forEach((card) => {
+    card.classList.toggle("active", card.dataset.shopId === String(shopId));
+  });
+}
+
+function scrollToActiveCard() {
+  const activeCard = document.querySelector(
+    `[data-shop-id="${activeShopId}"]`
+  );
+
+  if (!activeCard) return;
+
+  activeCard.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
   });
 }
 
@@ -158,87 +240,57 @@ async function loadShops() {
     hero_image: shop.hero_image
   }));
 
-  const initialShops = getInitialShops();
+  renderAllMarkers();
 
-  renderShops(initialShops, {
-    isInitialView: true
-  });
-
-  addShopMarkers(initialShops);
-  fitMapToShops(initialShops);
+  if (mapLoaded) {
+    renderVisibleShopsFromMap();
+  } else {
+    renderShops(shops, {
+      mode: "all"
+    });
+  }
 }
 
 // ==========================
 // Directory
 // ==========================
 
-function fitMapToShops(list) {
-  if (!map || !mapLoaded || !list.length) return;
-
-  const validShops = list.filter(
-    (shop) =>
-      Number.isFinite(shop.longitude) &&
-      Number.isFinite(shop.latitude)
-  );
-
-  if (!validShops.length) return;
-
-  if (validShops.length === 1) {
-    map.flyTo({
-      center: [validShops[0].longitude, validShops[0].latitude],
-      zoom: 13,
-      duration: 900,
-      essential: true
-    });
-
-    return;
-  }
-
-  const bounds = new mapboxgl.LngLatBounds();
-
-  validShops.forEach((shop) => {
-    bounds.extend([shop.longitude, shop.latitude]);
-  });
-
-  map.fitBounds(bounds, {
-    padding: 80,
-    maxZoom: 13,
-    duration: 900
-  });
-}
-
 function renderShops(list, options = {}) {
   if (!shopList) return;
 
-  const { isInitialView = false } = options;
+  const { mode = "map" } = options;
 
   shopList.innerHTML = "";
 
   if (!list.length) {
     shopList.innerHTML = `
       <article class="shop-card">
-        <h3>No shops found yet.</h3>
+        <h3>No shops in this map area.</h3>
         <p class="shop-description">
-          Try searching by city, state, ZIP, or shop name.
+          Move the map, zoom out, or search by city, state, ZIP, or shop name.
         </p>
       </article>
     `;
 
     if (resultsMeta) {
-      resultsMeta.textContent = "No matching shops";
+      resultsMeta.textContent = "No shops in this map area";
     }
 
-    addShopMarkers([]);
     return;
   }
 
   if (resultsMeta) {
-    resultsMeta.textContent =
-      isInitialView && shops.length > list.length
-        ? `Showing ${list.length} of ${shops.length} shops`
-        : list.length === shops.length
-          ? "Results"
-          : `${list.length} matching shop${list.length === 1 ? "" : "s"}`;
+    if (mode === "search") {
+      resultsMeta.textContent = `${list.length} matching shop${
+        list.length === 1 ? "" : "s"
+      }`;
+    } else if (mode === "selected") {
+      resultsMeta.textContent = "Selected shop";
+    } else {
+      resultsMeta.textContent = `${list.length} shop${
+        list.length === 1 ? "" : "s"
+      } in this map area`;
+    }
   }
 
   list.forEach((shop) => {
@@ -249,6 +301,10 @@ function renderShops(list, options = {}) {
     const card = document.createElement("article");
     card.className = "shop-card";
     card.dataset.shopId = shop.id;
+
+    if (String(shop.id) === String(activeShopId)) {
+      card.classList.add("active");
+    }
 
     card.innerHTML = `
       <h3>${shop.name}</h3>
@@ -263,11 +319,7 @@ function renderShops(list, options = {}) {
     `;
 
     card.addEventListener("click", () => {
-      document.querySelectorAll(".shop-card").forEach((card) => {
-        card.classList.remove("active");
-      });
-
-      card.classList.add("active");
+      setActiveShop(shop.id);
 
       if (!map) return;
 
@@ -289,22 +341,15 @@ function renderShops(list, options = {}) {
 
     shopList.appendChild(card);
   });
-
-  fitMapToShops(list);
 }
 
 function filterShops(query) {
   const cleanQuery = query.trim().toLowerCase();
 
+  activeShopId = null;
+
   if (!cleanQuery) {
-    const initialShops = getInitialShops();
-
-    renderShops(initialShops, {
-      isInitialView: true
-    });
-
-    addShopMarkers(initialShops);
-    fitMapToShops(initialShops);
+    renderVisibleShopsFromMap();
     return;
   }
 
@@ -325,8 +370,10 @@ function filterShops(query) {
     return searchableText.includes(cleanQuery);
   });
 
-  renderShops(filtered);
-  addShopMarkers(filtered);
+  renderShops(filtered, {
+    mode: "search"
+  });
+
   fitMapToShops(filtered);
 }
 
