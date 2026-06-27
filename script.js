@@ -74,14 +74,20 @@ function renderShops(list) {
         </p>
       </article>
     `;
-    resultsMeta.textContent = "No matching shops";
+
+    if (resultsMeta) {
+      resultsMeta.textContent = "No matching shops";
+    }
+
     return;
   }
 
-  resultsMeta.textContent =
-    list.length === shops.length
-      ? "Featured independent wine shops"
-      : `${list.length} matching shop${list.length === 1 ? "" : "s"}`;
+  if (resultsMeta) {
+    resultsMeta.textContent =
+      list.length === shops.length
+        ? "Featured independent wine shops"
+        : `${list.length} matching shop${list.length === 1 ? "" : "s"}`;
+  }
 
   list.forEach((shop) => {
     const card = document.createElement("article");
@@ -94,7 +100,7 @@ function renderShops(list) {
       </p>
       <p class="shop-description">${shop.description}</p>
       <div class="shop-tags">
-        ${shop.tags.map((tag) => `<span>${tag}</span>`).join("")}
+        ${shop.tags.map(tag => `<span>${tag}</span>`).join("")}
       </div>
       <a class="shop-link" href="${shop.website}" target="_blank" rel="noopener">
         Visit shop →
@@ -103,6 +109,7 @@ function renderShops(list) {
 
     shopList.appendChild(card);
   });
+}
 }
 
 function filterShops(query) {
