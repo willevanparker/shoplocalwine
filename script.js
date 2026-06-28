@@ -398,9 +398,9 @@ function filterShops(query) {
 }
 
 if (shopSearch) {
-  shopSearch.addEventListener("input", (event) => {
+  shopSearch.oninput = (event) => {
     filterShops(event.target.value);
-  });
+  };
 }
 
 loadShops();
