@@ -8,7 +8,7 @@
 
   <meta
     name="description"
-    content="Learn why ShopLocal.Wine was created."
+    content="ShopLocal.Wine helps people discover and support independent local wine shops."
   />
 
   <link rel="stylesheet" href="styles.css" />
@@ -26,24 +26,148 @@
       flex-direction: column;
     }
 
-    .about-page {
-      flex: 1;
+    .site-header {
       width: 100%;
     }
 
-    .about-title {
-      font-size: clamp(2rem, 4vw, 3.5rem);
-      line-height: 1.05;
-      letter-spacing: -0.04em;
-      margin: 0 0 28px;
+    .about-page {
+      flex: 1;
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      padding: 0;
     }
 
-    .about-eyebrow {
-      margin-bottom: 14px;
+    .about-hero {
+      padding: 88px 24px 54px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .about-hero-inner {
+      max-width: var(--container);
+      margin: 0 auto;
+    }
+
+    .about-kicker {
+      margin: 0 0 18px;
+      font-family: Arial, sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--wine);
+    }
+
+    .about-title {
+      max-width: 860px;
+      margin: 0;
+      font-size: clamp(3.2rem, 8vw, 6.8rem);
+      line-height: 0.92;
+      letter-spacing: -0.07em;
+    }
+
+    .about-body {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 56px 24px 88px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 58px;
+      align-items: start;
+    }
+
+    .about-copy {
+      max-width: 720px;
+    }
+
+    .about-copy p {
+      margin: 0 0 24px;
+      font-family: Arial, sans-serif;
+      font-size: 1.08rem;
+      line-height: 1.78;
+      color: var(--muted);
+    }
+
+    .about-copy .lead {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.45rem, 3vw, 2.15rem);
+      line-height: 1.22;
+      letter-spacing: -0.035em;
+      color: var(--ink);
+    }
+
+    .about-note {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .about-note h2 {
+      margin: 0 0 12px;
+      font-size: 1.45rem;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .about-note p {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      font-size: 0.96rem;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .about-signoff {
+      margin-top: 38px;
+    }
+
+    .about-signoff p {
+      margin-bottom: 6px;
+    }
+
+    .about-name {
+      font-weight: 700;
+      color: var(--ink) !important;
     }
 
     .site-footer {
       margin-top: auto;
+    }
+
+    @media (max-width: 900px) {
+      .about-hero {
+        padding-top: 64px;
+      }
+
+      .about-body {
+        grid-template-columns: 1fr;
+        gap: 34px;
+        padding-top: 42px;
+      }
+
+      .about-note {
+        max-width: 520px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .about-hero {
+        padding: 56px 18px 38px;
+      }
+
+      .about-body {
+        padding: 36px 18px 66px;
+      }
+
+      .about-title {
+        font-size: clamp(3rem, 16vw, 4.7rem);
+      }
+
+      .about-copy .lead {
+        font-size: 1.42rem;
+      }
     }
   </style>
 </head>
@@ -71,28 +195,48 @@
     <a href="index.html#shop">Shop</a>
     <a href="about.html">About</a>
     <a href="index.html#newsletter">Newsletter</a>
-    <a href="index.html#submit">Submit a Shop</a>
   </nav>
 
   <main class="about-page">
 
-    <div class="about-content">
-      <p class="about-eyebrow">ABOUT</p>
+    <section class="about-hero">
+      <div class="about-hero-inner">
+        <p class="about-kicker">About</p>
+        <h1 class="about-title">Independent wine shops deserve the spotlight.</h1>
+      </div>
+    </section>
 
-      <h1 class="about-title">About ShopLocal.Wine</h1>
+    <section class="about-body">
+      <div class="about-copy">
+        <p class="lead">
+          ShopLocal.Wine was created to make it easier to find the neighborhood wine shops that make wine feel personal, human, and fun.
+        </p>
 
-      <p>
-        Lorem ipsum.
-      </p>
+        <p>
+          The best local shops do more than sell bottles. They remember what you liked last time, point you toward something new, help you find a gift, explain a label without making it weird, and make dinner feel a little more considered.
+        </p>
 
-      <p class="about-signoff">
-        Thanks for stopping by,
-      </p>
+        <p>
+          This directory is built for those places: the independent retailers, small teams, owner-operated shops, and thoughtful neighborhood stores that give wine culture its texture.
+        </p>
 
-      <p class="about-name">
-        Will
-      </p>
-    </div>
+        <p>
+          Whether you are looking for a bottle tonight, planning a trip, sending a gift, or just trying to understand what is nearby, ShopLocal.Wine is here to help you start with a real local shop.
+        </p>
+
+        <div class="about-signoff">
+          <p>Thanks for stopping by,</p>
+          <p class="about-name">Will</p>
+        </div>
+      </div>
+
+      <aside class="about-note">
+        <h2>Why local?</h2>
+        <p>
+          Because a good wine shop is part guide, part gathering place, and part small business worth rooting for.
+        </p>
+      </aside>
+    </section>
 
   </main>
 
@@ -108,7 +252,6 @@
       <a href="about.html">About</a>
       <a href="privacy.html">Privacy</a>
       <a href="terms.html">Terms</a>
-      <a href="affiliate.html">Affiliate</a>
     </div>
   </footer>
 
