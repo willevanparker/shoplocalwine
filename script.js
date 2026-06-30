@@ -251,6 +251,12 @@ async function loadShops() {
       mode: "all"
     });
   }
+
+  const currentQuery = getSearchQuery();
+
+  if (currentQuery) {
+    applyShopFilter(currentQuery);
+  }
 }
 
 // ==========================
@@ -378,8 +384,8 @@ const stateNames = {
   WY: "Wyoming"
 };
 
-function filterShops(query) {
-  const cleanQuery = query.trim().toLowerCase();
+function applyShopFilter(query) {
+  const cleanQuery = String(query || "").trim().toLowerCase();
 
   activeShopId = null;
 
@@ -431,7 +437,7 @@ function handleSearchInput(event) {
   const value = event.target.value;
 
   syncSearchInputs(value, event.target);
-  filterShops(value);
+  applyShopFilter(value);
 }
 
 [shopSearch, shopSearchDesktop].forEach((input) => {
@@ -442,14 +448,12 @@ function handleSearchInput(event) {
 
 window.filterShops = (query) => {
   syncSearchInputs(query, null);
-  filterShops(query);
+  applyShopFilter(query);
 };
 
 if (shopSearch && shopSearch.value) {
   syncSearchInputs(shopSearch.value, shopSearch);
 }
-
-loadShops();
 
 // ==========================
 // Chat UI
@@ -591,6 +595,7 @@ async function sendChatMessage() {
   }
 }
 
+loadShops();
 restoreConversationMessages();
 
 if (sendMessage) {
