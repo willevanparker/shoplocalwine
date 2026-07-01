@@ -21,6 +21,12 @@ html {
   scroll-behavior: smooth;
 }
 
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
@@ -793,11 +799,11 @@ h3 {
     padding-top: 34px;
   }
 
-.submit-shop-cta-button {
-  width: 100%;
-  min-height: 58px;
-  font-size: 1rem;
-}
+  .submit-shop-cta-button {
+    width: 100%;
+    min-height: 58px;
+    font-size: 1rem;
+  }
 
   .submit-shop-form {
     grid-template-columns: 1fr;
@@ -904,6 +910,7 @@ h3 {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
   box-shadow: 0 30px 80px rgba(0,0,0,.25);
 }
 
@@ -991,14 +998,16 @@ h3 {
 
 .chat-input {
   display: flex;
+  min-width: 0;
   border-top: 1px solid var(--line);
 }
 
 .chat-input input {
   flex: 1;
+  min-width: 0;
   border: none;
   padding: 18px;
-  font-size: 15px;
+  font-size: 16px;
   outline: none;
   font-family: Arial, sans-serif;
 }
@@ -1020,11 +1029,12 @@ h3 {
   }
 
   .chat-window{
-    width:100vw;
-    max-width:100vw;
+    width:100%;
+    max-width:100%;
     height:100dvh;
     max-height:100dvh;
     border-radius:0;
+    overflow:hidden;
   }
 
   .chat-header,
@@ -1044,17 +1054,20 @@ h3 {
     max-width:100%;
   }
 
+  .chat-input{
+    min-width:0;
+  }
+
   .chat-input input{
     min-width:0;
     width:100%;
+    font-size:16px;
   }
 
   .chat-input button{
     flex:0 0 64px;
     width:64px;
   }
-
-}
 
 }
 
