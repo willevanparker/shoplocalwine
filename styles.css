@@ -662,7 +662,7 @@ h3 {
   min-height: 44px;
   margin-top: auto;
   padding: 0 22px;
-  border: 6px solid var(--wine);
+  border: 2px solid var(--wine);
   border-radius: 20px;
   background: var(--surface);
   color: var(--wine);
