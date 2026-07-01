@@ -46,8 +46,7 @@
       <div class="hero-inner">
         <h1>Discover local wine shops.</h1>
         <p class="hero-copy">
-Local wine shops are the heart of the wine community. They connect passionate producers with curious drinkers, champion small wineries, and bring people together over a shared love of wine.        </p>
-        <a href="#directory" class="primary-button">Explore</a>
+Local wine shops are the heart of the wine community. They connect passionate producers with curious drinkers, champion small wineries, and bring people together over a shared love of wine. Whether you're searching for your neighborhood shop or discovering one while you travel, we're here to help you find it.        <a href="#directory" class="primary-button">Explore</a>
       </div>
     </section>
 
@@ -105,7 +104,7 @@ Local wine shops are the heart of the wine community. They connect passionate pr
         <p class="eyebrow">Newsletter</p>
         <h2>Have something to discuss at happy hour.</h2>
         <p>
-          A once-weekly newsletter covering various wine industry topics.
+         A weekly newsletter celebrating independent wine shops, the people behind them, and the stories shaping the wine industry.
         </p>
       </div>
 
@@ -198,74 +197,66 @@ Local wine shops are the heart of the wine community. They connect passionate pr
       <p class="eyebrow">Submit a Shop</p>
       <h2 id="submitShopTitle">Know a great local wine shop?</h2>
       <p class="submit-shop-intro">
-        Send us the basics and we will review it before it appears on ShopLocal.Wine.
+        Send us the basics and we will take a look! 
       </p>
 
       <form class="submit-shop-form" id="submitShopForm">
-        <div class="form-field">
-          <label for="submitShopName">Shop name *</label>
-          <input type="text" id="submitShopName" name="name" required />
-        </div>
+  <div class="form-field">
+    <label for="submitShopName">Shop name *</label>
+    <input type="text" id="submitShopName" name="name" required />
+  </div>
 
-        <div class="form-field">
-          <label for="submitShopWebsite">Website</label>
-          <input type="url" id="submitShopWebsite" name="website" />
-        </div>
+  <div class="form-field">
+    <label for="submitShopWebsite">Website *</label>
+    <input type="url" id="submitShopWebsite" name="website" required />
+  </div>
 
-        <div class="form-field form-field-wide">
-          <label for="submitShopAddress">Street address</label>
-          <input type="text" id="submitShopAddress" name="address" />
-        </div>
+  <div class="form-field form-field-wide">
+    <label for="submitShopAddress">Street address *</label>
+    <input type="text" id="submitShopAddress" name="address" required />
+  </div>
 
-        <div class="form-field">
-          <label for="submitShopCity">City *</label>
-          <input type="text" id="submitShopCity" name="city" required />
-        </div>
+  <div class="form-field">
+    <label for="submitShopCity">City *</label>
+    <input type="text" id="submitShopCity" name="city" required />
+  </div>
 
-        <div class="form-field">
-          <label for="submitShopState">State *</label>
-          <input type="text" id="submitShopState" name="state" required />
-        </div>
+  <div class="form-field">
+    <label for="submitShopState">State *</label>
+    <input type="text" id="submitShopState" name="state" required />
+  </div>
 
-        <div class="form-field">
-          <label for="submitShopZip">ZIP</label>
-          <input type="text" id="submitShopZip" name="zip" inputmode="numeric" />
-        </div>
+  <div class="form-field">
+    <label for="submitShopZip">ZIP *</label>
+    <input type="text" id="submitShopZip" name="zip" inputmode="numeric" required />
+  </div>
 
-        <div class="form-field">
-          <label for="submitShopNeighborhood">Neighborhood</label>
-          <input type="text" id="submitShopNeighborhood" name="neighborhood" />
-        </div>
+  <div class="form-field">
+    <label for="submitShopNeighborhood">Neighborhood *</label>
+    <input type="text" id="submitShopNeighborhood" name="neighborhood" required />
+  </div>
 
-        <div class="form-field form-field-wide">
-          <label for="submitShopDescription">Short description</label>
-          <textarea id="submitShopDescription" name="description" rows="3"></textarea>
-        </div>
+  <div class="form-field form-field-wide">
+    <label for="submitShopDescription">Short description *</label>
+    <textarea
+      id="submitShopDescription"
+      name="description"
+      rows="3"
+      placeholder="Tell us why you love this shop!"
+      required
+    ></textarea>
+  </div>
 
-        <div class="form-field form-field-wide">
-          <label for="submitShopTags">Tags</label>
-          <input
-            type="text"
-            id="submitShopTags"
-            name="tags"
-            placeholder="Natural wine, tastings, neighborhood favorite"
-          />
-        </div>
-
-        <div class="form-field">
-          <label for="submitContactName">Contact name</label>
-          <input type="text" id="submitContactName" name="contact_name" />
-        </div>
-
-        <div class="form-field">
-          <label for="submitContactEmail">Contact email *</label>
-          <input type="email" id="submitContactEmail" name="contact_email" required />
-        </div>
-
-        <div class="form-field form-field-wide">
-          <label for="submitShopInstagram">Instagram URL or handle</label>
-          <input type="text" id="submitShopInstagram" name="instagram" />
-        </div>
+  <div class="form-field form-field-wide">
+    <label for="submitShopTags">Tags *</label>
+    <input
+      type="text"
+      id="submitShopTags"
+      name="tags"
+      placeholder="Natural wines, tastings, local goods, etc."
+      required
+    />
+  </div>
 
         <p class="submit-shop-error" id="submitShopError" role="alert"></p>
 
