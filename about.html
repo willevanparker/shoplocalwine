@@ -39,7 +39,7 @@
     }
 
     .about-hero {
-      padding: 88px 24px 54px;
+      padding: 88px 24px 38px;
       border-bottom: 1px solid var(--line);
     }
 
@@ -49,7 +49,7 @@
     }
 
     .about-kicker {
-      margin: 0 0 18px;
+      margin: 0;
       font-family: Arial, sans-serif;
       font-size: 0.78rem;
       font-weight: 700;
@@ -58,22 +58,10 @@
       color: var(--wine);
     }
 
-    .about-title {
-      max-width: 860px;
-      margin: 0;
-      font-size: clamp(3.2rem, 8vw, 6.8rem);
-      line-height: 0.92;
-      letter-spacing: -0.07em;
-    }
-
     .about-body {
       max-width: var(--container);
       margin: 0 auto;
       padding: 56px 24px 88px;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 320px;
-      gap: 58px;
-      align-items: start;
     }
 
     .about-copy {
@@ -85,37 +73,6 @@
       font-family: Arial, sans-serif;
       font-size: 1.08rem;
       line-height: 1.78;
-      color: var(--muted);
-    }
-
-    .about-copy .lead {
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(1.45rem, 3vw, 2.15rem);
-      line-height: 1.22;
-      letter-spacing: -0.035em;
-      color: var(--ink);
-    }
-
-    .about-note {
-      padding: 24px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: var(--surface);
-      box-shadow: var(--shadow);
-    }
-
-    .about-note h2 {
-      margin: 0 0 12px;
-      font-size: 1.45rem;
-      line-height: 1.1;
-      letter-spacing: -0.03em;
-    }
-
-    .about-note p {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      font-size: 0.96rem;
-      line-height: 1.65;
       color: var(--muted);
     }
 
@@ -142,38 +99,23 @@
       }
 
       .about-body {
-        grid-template-columns: 1fr;
-        gap: 34px;
         padding-top: 42px;
-      }
-
-      .about-note {
-        max-width: 520px;
       }
     }
 
     @media (max-width: 560px) {
       .about-hero {
-        padding: 56px 18px 38px;
+        padding: 56px 18px 34px;
       }
 
       .about-body {
         padding: 36px 18px 66px;
-      }
-
-      .about-title {
-        font-size: clamp(3rem, 16vw, 4.7rem);
-      }
-
-      .about-copy .lead {
-        font-size: 1.42rem;
       }
     }
   </style>
 </head>
 
 <body>
-
   <header class="site-header">
     <a href="index.html" class="logo">ShopLocal.Wine</a>
 
@@ -196,46 +138,35 @@
     <a href="about.html">About</a>
     <a href="index.html#newsletter">Newsletter</a>
   </nav>
-<main class="about-page">
-  <section class="about-hero">
-    <div class="about-hero-inner">
-      <p class="about-kicker">About</p>
-      <h1 class="about-title">Why local wine shops matter.</h1>
-    </div>
-  </section>
 
-  <section class="about-body">
-    <div class="about-copy">
-      <p class="lead">
-        ShopLocal.Wine is a celebration of the independent wine shops that make wine more personal.
-      </p>
-
-      <p>
-        In 2017, my friend Erik invited me to my very first wine tasting at a local wine shop. I knew very little about wine, but that evening opened the door to a world of remarkable people, unforgettable wines, and lifelong friendships. Nearly a decade later, both that shop and Erik remain an important part of my life.
-      </p>
-
-      <p>
-        The best local wine shops do more than sell wine—they become places where conversations begin, friendships grow, and communities gather.
-      </p>
-
-      <p>
-        This directory is a celebration of those places: the local retailers, owner-operated shops, and neighborhood wine stores that make wine more personal. Whether you're searching for tonight's bottle, planning a trip, or discovering wine for the first time, I hope you'll start with a local wine shop.
-      </p>
-
-      <div class="about-signoff">
-        <p>Thanks for stopping by,</p>
-        <p class="about-name">Will</p>
+  <main class="about-page">
+    <section class="about-hero">
+      <div class="about-hero-inner">
+        <p class="about-kicker">About</p>
       </div>
-    </div>
+    </section>
 
-    <aside class="about-note">
-      <h2>Start local.</h2>
-      <p>
-        Every great bottle has people behind it. Local wine shops help you find them.
-      </p>
-    </aside>
-  </section>
-</main>
+    <section class="about-body">
+      <div class="about-copy">
+        <p>
+          In 2017, my friend Erik invited me to my very first wine tasting at a local wine shop. I knew very little about wine, but that evening opened the door to a world of remarkable people, unforgettable wines, and lifelong friendships. Nearly a decade later, both that shop and Erik remain an important part of my life.
+        </p>
+
+        <p>
+          The best local wine shops do more than sell wine—they become places where conversations begin, friendships grow, and communities gather.
+        </p>
+
+        <p>
+          This directory is a celebration of those places: the local retailers, owner-operated shops, and neighborhood wine stores that make wine more personal. Whether you're searching for tonight's bottle, planning a trip, or discovering wine for the first time, I hope you'll start with a local wine shop.
+        </p>
+
+        <div class="about-signoff">
+          <p>Thanks for stopping by,</p>
+          <p class="about-name">Will</p>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <div id="siteFooter"></div>
 
@@ -248,6 +179,5 @@
   </script>
 
   <script src="script.js"></script>
-
 </body>
 </html>
