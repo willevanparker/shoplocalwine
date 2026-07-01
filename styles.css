@@ -1016,15 +1016,45 @@ h3 {
 
   .chat-overlay{
     padding:0;
+    overflow:hidden;
   }
 
   .chat-window{
-    max-width:none;
-    width:100%;
-    height:100%;
-    max-height:none;
+    width:100vw;
+    max-width:100vw;
+    height:100dvh;
+    max-height:100dvh;
     border-radius:0;
   }
+
+  .chat-header,
+  .chat-messages,
+  .chat-disclaimer,
+  .chat-input{
+    width:100%;
+    max-width:100%;
+  }
+
+  .chat-messages{
+    padding:20px;
+  }
+
+  .assistant-message,
+  .user-message{
+    max-width:100%;
+  }
+
+  .chat-input input{
+    min-width:0;
+    width:100%;
+  }
+
+  .chat-input button{
+    flex:0 0 64px;
+    width:64px;
+  }
+
+}
 
 }
 
